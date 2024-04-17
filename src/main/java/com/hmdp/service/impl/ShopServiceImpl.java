@@ -14,8 +14,7 @@ import javax.annotation.Resource;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.hmdp.utils.RedisConstants.CACHE_SHOP_KEY;
-import static com.hmdp.utils.RedisConstants.CACHE_SHOP_TTL;
+import static com.hmdp.utils.RedisConstants.*;
 
 
 @Service
@@ -36,13 +35,20 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
             Shop shop = JSONUtil.toBean(shopJson, Shop.class);
             return Result.ok(shop);
         }
+        // 判断是否命中为空值
+        if (shopJson != null) {
+            // 返回一个错误信息
+            return Result.fail("商铺信息不存在");
+        }
 
         // 3.未命中 ———》根据id查询数据库
         Shop shop = getById(id);
 
         // 4.判断商铺是否存在
         if (shop == null) {
-            return Result.fail("商铺不存在");
+            // 写入空值，避免redis穿透，设置过期时间 2分钟
+            stringRedisTemplate.opsForValue().set(key, "", CACHE_NULL_TTL, TimeUnit.MINUTES);
+            return Result.fail("商铺信息不存在");
         }
 
         // 5.商铺存在，将商铺的信息写入redis中,并且设置缓存的过期时间
