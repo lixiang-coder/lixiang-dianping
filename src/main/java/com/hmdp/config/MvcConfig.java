@@ -23,13 +23,15 @@ public class MvcConfig implements WebMvcConfigurer {
         //登录拦截器     拦截部分请求    后执行
         registry.addInterceptor(new LoginInterceptor())
                 .excludePathPatterns(
-                        "/shop/**",
-                        "/voucher/**",
-                        "/shop-type/**",
-                        "/upload/**",
-                        "/blog/hot",
-                        "/user/code",
-                        "/user/login"
+                        //不需要登录的相关资源放行
+                        "/user/code",//验证码发送
+                        "/user/login",//登录验证
+                        "/user/me",//登录验证
+                        "/blog/hot",//热点博客
+                        "/shop/**",//店铺
+                        "/shop-type/**",//店铺类型
+                        "/upload/**",//上传资源 方便测试
+                        "/voucher/**"//优惠卷信息查询
                 ).order(1);
 
     }

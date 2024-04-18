@@ -113,7 +113,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         stringRedisTemplate.expire(LOGIN_USER_KEY + token, LOGIN_USER_TTL, TimeUnit.SECONDS);
 
 
-        return Result.ok();
+        //一定不要忘记返回token
+        return Result.ok(token);
     }
 
     /**
