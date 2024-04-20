@@ -76,7 +76,7 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
         RLock lock = redissonClient.getLock("lock:order:" + userId);
 
         //获取锁
-        boolean isLock = lock.tryLock();
+        boolean isLock = lock.tryLock();    //无参：则使用默认值-1，不等待
         if (!isLock){
             // 获取锁失败：重试或返回错误信息
             return Result.fail("不允许重复下单");
