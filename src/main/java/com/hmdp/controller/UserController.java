@@ -81,11 +81,12 @@ public class UserController {
 
     /**
      * 根据id查询用户详情
+     *
      * @param userId
      * @return
      */
     @GetMapping("/{id}")
-    public Result queryUserById(@PathVariable("id") Long userId){
+    public Result queryUserById(@PathVariable("id") Long userId) {
         // 查询详情
         User user = userService.getById(userId);
         if (user == null) {
@@ -98,11 +99,20 @@ public class UserController {
 
     /**
      * 用户签到功能
+     *
      * @return
      */
     @PostMapping("/sign")
-    public Result sign(){
+    public Result sign() {
         return userService.sign();
     }
 
+    /**
+     * 用户签到统计
+     * @return
+     */
+    @GetMapping("/sign/count")
+    public Result signCount() {
+        return userService.signCount();
+    }
 }
