@@ -51,15 +51,15 @@ public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow> impleme
             boolean isSuccess = save(follow);
             if (isSuccess) {
                 //保存成功，将关注数据同样保存进redis set集合
-                stringRedisTemplate.opsForSet().add(key,followId.toString());
+                stringRedisTemplate.opsForSet().add(key, followId.toString());
             }
         } else {
             // 3.取关，数据库中删除数据,sql:delete from tb_follow where user_id = ? and follow_user_id = ?
             boolean isSuccess = remove(new QueryWrapper<Follow>().eq("user_id", userId)
                     .eq("follow_user_id", followId));
-            if (isSuccess){
+            if (isSuccess) {
                 //删除成功,将redis种的数据删除
-                stringRedisTemplate.opsForZSet().remove(key,followId.toString());
+                stringRedisTemplate.opsForZSet().remove(key, followId.toString());
             }
         }
         return Result.ok();
@@ -83,6 +83,7 @@ public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow> impleme
 
     /**
      * 根据用户id查询共同关注
+     *
      * @param id
      * @return
      */
